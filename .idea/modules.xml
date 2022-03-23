@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ProjectAmnis.iml" filepath="$PROJECT_DIR$/.idea/ProjectAmnis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Test_Amnis_Gitlab.iml" filepath="$PROJECT_DIR$/Test_Amnis_Gitlab.iml" />
     </modules>
   </component>
 </project>
