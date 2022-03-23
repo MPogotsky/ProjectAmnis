@@ -36,33 +36,43 @@ public class JiraClient {
     }
 
 
-
-    public void getIssueComment(){
-
-        //get all fields from issue
-        Issue issue1 = restClient.getIssueClient().getIssue("AP-1").claim();
-        Iterable<IssueField> fields = issue1.getFields();
-        for(IssueField field: fields){
-            System.out.println(field.getName() +" : " + field.getId());
-        }
-
-
-        //get all project basic components
-        Project project = restClient.getProjectClient().getProject("AP").claim();
-        Iterable<BasicComponent> bc =  project.getComponents();
-
-        for (BasicComponent comp : bc) {
-            System.out.println(comp.getName() + " : " + comp.getId());
-        }
-
-
-
-        //getting all comments from issue
-        Issue issue = restClient.getIssueClient().getIssue("AP-6").claim();
+    /**
+     * Getting all comments from issue
+     * <p>
+     * @param key Issue Key
+     *
+     */
+    public void getIssueComment(String key){
+        Issue issue = restClient.getIssueClient().getIssue(key).claim();
         Iterable<Comment> commentList =  issue.getComments();
         for (Comment comment : commentList) {
             System.out.println(comment.getBody());
         }
+
     }
+
+    /**
+     * Getting project URI
+     *
+     * @param projectKey Project Key
+     */
+    public void getProjectURI(String projectKey){
+        Project project = restClient.getProjectClient().getProject(projectKey).claim();
+        System.out.println(project.getUri());
+    }
+
+    /**
+     * Getting all project issue fields from
+     *
+     * @param key Issue Key
+     */
+    public void getProjectIssueFields(String key){
+        Issue issue1 = restClient.getIssueClient().getIssue(key).claim();
+        Iterable<IssueField> fields = issue1.getFields();
+        for(IssueField field: fields){
+            System.out.println(field.getName() +" : " + field.getId());
+        }
+    }
+
 
 }
