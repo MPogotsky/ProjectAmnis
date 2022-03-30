@@ -17,38 +17,39 @@ public class GitLabClient {
     /**
      * Default predefined constructor
      */
-    public GitLabClient(){
+    public GitLabClient() {
         this.hostUrl = "https://gitlab.com";
         this.personalAccessToken = "glpat-vXrmFoCePMU_p79y2P_a";
         this.projectId = "34676173";
-        this.restClient = new GitLabApi(this.hostUrl, this.personalAccessToken);
+        this.restClient = getRestClient();
     }
 
     /**
      * Parametric constructor
      * <p>
-     * @param hostUrl gitlab server URL
+     *
+     * @param hostUrl             gitlab server URL
      * @param personalAccessToken token to get access to the repo
-     * @param projectId project ID from GitLab repo
-     * </p>
+     * @param projectId           project ID from GitLab repo
+     *                            </p>
      */
-    public GitLabClient(String hostUrl, String personalAccessToken, String projectId){
+    public GitLabClient(String hostUrl, String personalAccessToken, String projectId) {
         this.hostUrl = hostUrl;
         this.personalAccessToken = personalAccessToken;
         this.projectId = projectId;
         this.restClient = getRestClient();
     }
 
-    private GitLabApi getRestClient(){
+    private GitLabApi getRestClient() {
         return new GitLabApi(this.hostUrl, this.personalAccessToken);
     }
 
     /**
      * Prints current user
      */
-    public void getUser() throws GitLabApiException{
+    public void getUser() throws GitLabApiException {
         User currentUser = restClient.getUserApi().getCurrentUser();
-        System.out.println("GitLab User: "+currentUser.getUsername());
+        System.out.println("GitLab User: " + currentUser.getUsername());
     }
 
     /**
@@ -57,6 +58,6 @@ public class GitLabClient {
     public void getCommitHistory() throws GitLabApiException {
         Project project = restClient.getProjectApi().getProject("34676173");
         List<Commit> commits = restClient.getCommitsApi().getCommits(project);
-        System.out.println("Project commit history: \n"+commits);
+        System.out.println("Project commit history: \n" + commits);
     }
 }
