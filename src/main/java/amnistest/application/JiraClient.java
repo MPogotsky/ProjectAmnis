@@ -1,12 +1,17 @@
 package amnistest.application;
 
+
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.OptionalIterable;
 import com.atlassian.jira.rest.client.api.domain.*;
+import com.atlassian.jira.rest.client.api.domain.input.AuditRecordSearchInput;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
+import io.atlassian.util.concurrent.Promise;
 
 import java.net.URI;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class JiraClient {
      public String username;
@@ -91,15 +96,42 @@ public class JiraClient {
         Issue issue1 = restClient.getIssueClient().getIssue(key).claim();
         Iterable<IssueField> fields = issue1.getFields();
         for(IssueField field: fields){
-            System.out.println(field.getName() +" : " + field.getId());
+            System.out.println(field.getName() +" : " + field.getValue());
         }
     }
 
-    public void issueDataToJiraObject(String key){
+    public void issueDataToJiraObject(){
         List<Issue> issues = getAllUserIssues();
         for (Issue issue: issues){
-            //TODO estimate which fields will be in the jira object
+            System.out.println(issue.getField("customfield_10025").getValue());
         }
+    }
+
+    public TimeInStatus getTimeinStatus(){
+        //TODO refactor
+        //TODO get this to accept Issue
+        List<Issue> issues = getAllUserIssues();
+        Issue issue = issues.get(1);
+
+        String value = String.valueOf(issue.getField("customfield_10025").getValue());
+        String[] split = value.split("\\|");
+
+                System.out.println(Arrays.toString(split));
+
+        String[] split2 = split[0].split("\\_");
+
+        System.out.println(Arrays.toString(split2));
+        TimeInStatus tis = new TimeInStatus();
+        tis.column = split2[0];
+        tis.timesInColumn = Integer.parseInt(split2[2]);
+        tis.stayedInColumn = Integer.parseInt(split2[4]);
+
+        //issue.getStatus() gives the column number
+        //status.statusCategory.name
+        System.out.println(tis.column);
+        System.out.println(tis.stayedInColumn);
+        System.out.println(tis.timesInColumn);
+        return tis;
     }
 
 
