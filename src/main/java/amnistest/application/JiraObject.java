@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JiraObject {
-    public String assignedPerson;
-    public String sprint;
-    public String storyPointEstimate;
-    public String epicLink;
-    public String team;
+    public String workRatio; // Time spent/original estimate  * 100
+    public String startDate; // START DATE
+    public String originalEstimate;
+    public String remainingEstimate;
     public String progress;
-
-
+    public List<TimeInStatus> timeInStatuses;
 
 }
