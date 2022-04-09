@@ -1,6 +1,7 @@
 package amnistest.application;
 
 import com.atlassian.jira.rest.client.api.JiraRestClient;
+import com.atlassian.jira.rest.client.api.OptionalIterable;
 import com.atlassian.jira.rest.client.api.domain.*;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 
@@ -12,6 +13,7 @@ public class JiraClient {
      public String password;
      public String jiraUrl;
      public JiraRestClient restClient;
+     public JiraObject jiraObject;
 
 
     public JiraClient(String username, String password, String jiraUrl){
@@ -19,6 +21,7 @@ public class JiraClient {
         this.password = password;
         this.jiraUrl = jiraUrl;
         this.restClient = getJiraRestClient();
+        this.jiraObject = new JiraObject();
     }
 
 
@@ -57,6 +60,28 @@ public class JiraClient {
         System.out.println(project.getUri());
     }
 
+    public List<String> getAllUserProjects(){
+        Iterable<BasicProject> projects = restClient.getProjectClient().getAllProjects().claim();
+        List<String> userProjects = new ArrayList<String>();
+        for (BasicProject proj: projects){
+            userProjects.add(proj.getKey());
+        }
+        return userProjects;
+    }
+
+    public List<Issue> getAllUserIssues(){
+        List<String> userProjectNames = getAllUserProjects();
+        List<Issue> userIssues = new ArrayList<Issue>();
+        for (String projectName : userProjectNames){
+            Project project = restClient.getProjectClient().getProject(projectName).claim();
+            Promise<SearchResult> searchJqlPromise = restClient.getSearchClient().searchJql("project =" + project.getName() + " AND assignee=currentUser()");
+            for (Issue issue : searchJqlPromise.claim().getIssues()) {
+                userIssues.add(issue);
+            }
+        }
+        return userIssues;
+    }
+
     /**
      * Getting all project issue fields from
      *
@@ -67,6 +92,13 @@ public class JiraClient {
         Iterable<IssueField> fields = issue1.getFields();
         for(IssueField field: fields){
             System.out.println(field.getName() +" : " + field.getId());
+        }
+    }
+
+    public void issueDataToJiraObject(String key){
+        List<Issue> issues = getAllUserIssues();
+        for (Issue issue: issues){
+            //TODO estimate which fields will be in the jira object
         }
     }
 
