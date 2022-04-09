@@ -12,6 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ProjectAmnis" target="17" />
+      <module name="Test_Amnis_Gitlab" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
