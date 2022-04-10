@@ -61,6 +61,12 @@
             <version>5.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
+        </dependency>
+
     </dependencies>
 
 
@@ -68,10 +74,8 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <!-- Use the latest version whenever possible. -->
+        <jackson.version>2.12.4</jackson.version>
     </properties>
-
-
-
-
 
 </project>

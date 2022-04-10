@@ -1,24 +1,26 @@
 package amnistest.application;
 
+import amnistest.application.GitLab.GitLabClient;
+import amnistest.application.GitLab.ParsedCommit;
 import org.gitlab4j.api.GitLabApiException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppMain {
     public static void main(String[] args){
 
-        JiraClient jiraClient = new JiraClient("256629@student.pwr.edu.pl", "WtRdJblWpMcl2L7eDpyS8198", "https://project-amnis.atlassian.net/");
-
-        jiraClient.getIssueComment("AP-6");
-        jiraClient.getProjectURI("AP");
-        jiraClient.getProjectIssueFields("AP-1");
-
-
         GitLabClient gitLabClient = new GitLabClient();
+        List<ParsedCommit> parsedCommits = new ArrayList<ParsedCommit>();
+
         try{
             gitLabClient.getCommitHistory();
-            gitLabClient.getUser();
+            parsedCommits = gitLabClient.getParsedCommitList();
+            for (ParsedCommit parsedCommit : parsedCommits) {
+                parsedCommit.PrintData();
+            }
         } catch (GitLabApiException exception){
             exception.getMessage();
         }
-
     }
 }
