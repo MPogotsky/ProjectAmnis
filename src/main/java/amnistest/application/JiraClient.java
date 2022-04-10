@@ -1,15 +1,11 @@
 package amnistest.application;
 
-
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.domain.*;
-import com.atlassian.jira.rest.client.api.domain.input.AuditRecordSearchInput;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
-import io.atlassian.util.concurrent.Promise;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class JiraClient {
      public String username;
