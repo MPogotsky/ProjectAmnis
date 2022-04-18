@@ -2,10 +2,7 @@ package amnistest.application.GitLab;
 
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.Commit;
-import org.gitlab4j.api.models.CommitStats;
-import org.gitlab4j.api.models.Project;
-import org.gitlab4j.api.models.User;
+import org.gitlab4j.api.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +13,8 @@ public class GitLabClient {
     private String hostUrl;
     private String projectId;
     private GitLabApi restClient;
-    private List<Commit> commits;
+    private List<Commit> rawCommits;
+    private List<Commit> mergeCommits;
 
     /**
      * Default predefined constructor
@@ -26,7 +24,8 @@ public class GitLabClient {
         this.personalAccessToken = "glpat-vXrmFoCePMU_p79y2P_a";
         this.projectId = "34676173";
         this.restClient = getRestClient();
-        this.commits = new ArrayList<Commit>();
+        this.rawCommits = new ArrayList<Commit>();
+        this.mergeCommits = new ArrayList<Commit>();
     }
 
     /**
@@ -43,11 +42,42 @@ public class GitLabClient {
         this.personalAccessToken = personalAccessToken;
         this.projectId = projectId;
         this.restClient = getRestClient();
-        this.commits = new ArrayList<Commit>();
+        this.rawCommits = new ArrayList<Commit>();
+        this.mergeCommits = new ArrayList<Commit>();
     }
 
     /**
-     * Get rest client for GitLab API
+     * Gets list of commits from project and
+     * parses it.
+     *
+     *  ! Skips merge request commits !
+     *
+     * @return List of ParsedCommit
+     */
+    public List<ParsedCommit> getCommitList() throws GitLabApiException {
+        Project project = getProjectByID(projectId);
+        rawCommits = getRawCommits(project);
+        List<ParsedCommit> parsedCommits = new ArrayList<ParsedCommit>();
+        for (Commit commit : rawCommits) {
+            /*
+             * If commit is merge request write it down to a separate list.
+             * Do nothing with merge commit just keep it for now,
+             * but it could be useful later, maybe.
+             */
+            if (isMergeRequest(commit)) {
+                mergeCommits.add(commit);
+            } else {
+                ParsedCommit parsedCommit = getParsedCommit(commit);
+                parsedCommits.add(parsedCommit);
+            }
+        }
+        return parsedCommits;
+    }
+
+    /**
+     * Get rest client for GitLab API based on
+     * host URL and personal access token
+     *
      * @return rest client for GitLab
      */
     private GitLabApi getRestClient() {
@@ -55,46 +85,55 @@ public class GitLabClient {
     }
 
     /**
-     * Print current user
+     * Get Gitlab API Project instance based on
+     * project ID from GitLab webpage
+     *
+     * @return gitlab Project
      */
-    public void getUser() throws GitLabApiException {
-        User currentUser = restClient.getUserApi().getCurrentUser();
-        System.out.println("GitLab User: " + currentUser.getUsername());
-    }
-
-
-    /**
-     * Get all commits from project defined by projectId
-     */
-    public void getCommitHistory() throws GitLabApiException {
-        //TODO: Add segregation of commits by commit-type(merge, standard commit and so on)
-        Project project = restClient.getProjectApi().getProject(projectId);
-        commits = restClient.getCommitsApi().getCommits(project, null, null, null, null, null, true, null);
+    private Project getProjectByID(String projectId) throws GitLabApiException {
+        return restClient.getProjectApi().getProject(projectId);
     }
 
     /**
-     * Parse commit from list of commits to ParsedCommit obj
+     * Gets all commits from the project
+     * in a raw JSON format
+     *
+     * @return gitlab Project
+     */
+    private List<Commit> getRawCommits(Project project) throws GitLabApiException {
+        return restClient.getCommitsApi().getCommits(project, null, null, null, null, null, true, null);
+    }
+
+    /**
+     * Parse commit to ParsedCommit obj
+     *
      * @return List of ParsedCommit
      */
-    public List<ParsedCommit> getParsedCommitList() throws GitLabApiException {
-        List<ParsedCommit> parsedCommits = new ArrayList<ParsedCommit>();
-        for (Commit commit : commits) {
-            ParsedCommit parsedCommit = new ParsedCommit();
-            CommitStats stats = new CommitStats();
+    private ParsedCommit getParsedCommit(Commit commit) throws GitLabApiException {
+        ParsedCommit parsedCommit = new ParsedCommit();
 
-            parsedCommit.commiterEmail = commit.getCommitterEmail();
-            parsedCommit.commiterName = commit.getCommitterName();
-            parsedCommit.commitID = commit.getId();
-            parsedCommit.message = commit.getMessage();
-            parsedCommit.createdAt = commit.getCommittedDate();
+        parsedCommit.commiterEmail = commit.getCommitterEmail();
+        parsedCommit.commiterName = commit.getCommitterName();
+        parsedCommit.commitID = commit.getId();
+        parsedCommit.message = commit.getMessage();
+        parsedCommit.createdAt = commit.getCommittedDate();
 
-            parsedCommit.additions = commit.getStats().getAdditions();
-            parsedCommit.deletions = commit.getStats().getDeletions();
-            parsedCommit.total = commit.getStats().getTotal();
+        parsedCommit.additions = commit.getStats().getAdditions();
+        parsedCommit.deletions = commit.getStats().getDeletions();
+        parsedCommit.total = commit.getStats().getTotal();
 
-            parsedCommits.add(parsedCommit);
-        }
-        return parsedCommits;
+        return parsedCommit;
+    }
+
+    /**
+     * Returns: true if commit is merge request
+     * and false if opposite
+     *
+     * @return Boolean
+     */
+    private boolean isMergeRequest(Commit examinedCommit) throws GitLabApiException {
+        List<String> parenId = examinedCommit.getParentIds();
+        return parenId.size() > 1;
     }
 
 }

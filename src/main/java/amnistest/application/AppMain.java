@@ -14,8 +14,7 @@ public class AppMain {
         List<ParsedCommit> parsedCommits = new ArrayList<ParsedCommit>();
 
         try{
-            gitLabClient.getCommitHistory();
-            parsedCommits = gitLabClient.getParsedCommitList();
+            parsedCommits = gitLabClient.getCommitList();
             for (ParsedCommit parsedCommit : parsedCommits) {
                 parsedCommit.PrintData();
             }
