@@ -7,7 +7,9 @@ public class AppMain {
 //        jiraClient.getAllUserIssues();
 //        jiraClient.getProjectIssueFields("AP-6");
 //        jiraClient.issueDataToJiraObject();
-        jiraClient.getTimeinStatus();
+        //jiraClient.getProjectIssueFields("AP-10");
+        jiraClient.issueDataToJiraObject();
+        //jiraClient.getTimeinStatus();
 
     }
 }

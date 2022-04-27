@@ -26,7 +26,7 @@ public class JiraClient {
         this.password = password;
         this.jiraUrl = jiraUrl;
         this.restClient = getJiraRestClient();
-        this.jiraObject = new JiraObject();
+        this.jiraObject = new JiraObject(this);
     }
 
 
@@ -100,37 +100,75 @@ public class JiraClient {
         }
     }
 
-    public void issueDataToJiraObject(){
-        List<Issue> issues = getAllUserIssues();
-        for (Issue issue: issues){
-            System.out.println(issue.getField("customfield_10025").getValue());
-        }
+    public String getFieldValue(String IssueKey, String fieldID){
+        Issue issue1 = restClient.getIssueClient().getIssue(IssueKey).claim();
+        IssueField field = issue1.getField(fieldID);
+        return String.valueOf(field.getValue());
     }
 
-    public TimeInStatus getTimeinStatus(){
-        //TODO refactor
-        //TODO get this to accept Issue
-        List<Issue> issues = getAllUserIssues();
-        Issue issue = issues.get(1);
+
+
+    public void issueDataToJiraObject(){
+        this.jiraObject = new JiraObject(this);
+        this.jiraObject.print();
+    }
+
+    public List<TimeInStatus> getTimeinStatus(String IssueKey){
+        List<TimeInStatus> timeInStatuses = new ArrayList<TimeInStatus>();
+        Issue issue = restClient.getIssueClient().getIssue(IssueKey).claim();
 
         String value = String.valueOf(issue.getField("customfield_10025").getValue());
-        String[] split = value.split("\\|");
+        String[] columns = value.split("\\|");
+        for (String column : columns){
+            String[] separatedValues = column.split("\\_");
+            TimeInStatus tis = getTimeInStatus(separatedValues);
+            timeInStatuses.add(tis);
+        }
+        return timeInStatuses;
+    }
 
-                System.out.println(Arrays.toString(split));
+    public String extractColumnName(String[] data){
+        if(data.length == 6){
+            if(!data[0].equals("*")){
+                return data[0];
+            }
+            else return data[1];
 
-        String[] split2 = split[0].split("\\_");
+        }
+        return data[1];
+    }
 
-        System.out.println(Arrays.toString(split2));
+    public int extractTimeInColumn(String[] data){
+        if(data.length == 6){
+            if(!data[0].equals("*")){
+                return Integer.parseInt(data[2]);
+            }
+            else {
+                return Integer.parseInt(data[3]);
+            }
+        }
+        return Integer.parseInt(data[3]);
+
+    }
+
+    public int extractStayedInColumn(String[] data){
+        if(data.length == 6){
+            if(!data[0].equals("*")){
+                return Integer.parseInt(data[4]);
+            }
+            else {
+                return Integer.parseInt(data[5]);
+            }
+        }
+        return Integer.parseInt(data[5]);
+
+    }
+
+    public TimeInStatus getTimeInStatus(String[] data){
         TimeInStatus tis = new TimeInStatus();
-        tis.column = split2[0];
-        tis.timesInColumn = Integer.parseInt(split2[2]);
-        tis.stayedInColumn = Integer.parseInt(split2[4]);
-
-        //issue.getStatus() gives the column number
-        //status.statusCategory.name
-        System.out.println(tis.column);
-        System.out.println(tis.stayedInColumn);
-        System.out.println(tis.timesInColumn);
+        tis.column = extractColumnName(data);
+        tis.timesInColumn = extractTimeInColumn(data);
+        tis.stayedInColumn = extractStayedInColumn(data);
         return tis;
     }
 
