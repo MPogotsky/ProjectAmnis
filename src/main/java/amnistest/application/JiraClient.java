@@ -110,7 +110,6 @@ public class JiraClient {
 
     public void issueDataToJiraObject(){
         this.jiraObject = new JiraObject(this);
-        this.jiraObject.print();
     }
 
     public List<TimeInStatus> getTimeinStatus(String IssueKey){
@@ -118,11 +117,13 @@ public class JiraClient {
         Issue issue = restClient.getIssueClient().getIssue(IssueKey).claim();
 
         String value = String.valueOf(issue.getField("customfield_10025").getValue());
-        String[] columns = value.split("\\|");
-        for (String column : columns){
-            String[] separatedValues = column.split("\\_");
-            TimeInStatus tis = getTimeInStatus(separatedValues);
-            timeInStatuses.add(tis);
+        if(value != "null"){
+            String[] columns = value.split("\\|");
+            for (String column : columns){
+                String[] separatedValues = column.split("\\_");
+                TimeInStatus tis = getTimeInStatus(separatedValues);
+                timeInStatuses.add(tis);
+            }
         }
         return timeInStatuses;
     }

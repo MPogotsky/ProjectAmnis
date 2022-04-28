@@ -7,8 +7,10 @@ public class AppMain {
 //        jiraClient.getAllUserIssues();
 //        jiraClient.getProjectIssueFields("AP-6");
 //        jiraClient.issueDataToJiraObject();
-        //jiraClient.getProjectIssueFields("AP-10");
+        //jiraClient.getProjectIssueFields("AP-18");
         jiraClient.issueDataToJiraObject();
+        int a = jiraClient.jiraObject.calculateTaskValue();
+        System.out.println(a);
         //jiraClient.getTimeinStatus();
 
     }
