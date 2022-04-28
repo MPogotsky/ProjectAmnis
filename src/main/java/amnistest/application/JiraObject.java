@@ -18,6 +18,11 @@ public class JiraObject {
         this.timeInStatuses = jiraClient.getTimeinStatus(IssueKey);
     }
 
+    /**
+     *
+     * Calculates points for the task which is done
+     *
+     */
     public int calculateTaskValue(){
         int value = 0;
         List<Double> multipliers = createMultiplierList();
@@ -31,28 +36,44 @@ public class JiraObject {
         return value;
     }
 
+    /**
+     *
+     * Calculates points for one concrete column
+     *
+     * <p>
+     * @param timeInColumn time task spent in column
+     * @param multiplier column value multiplier
+     * <p/>
+     */
     public int calculateColumnValue(int timeInColumn, Double multiplier){
         return (timeInColumn*multiplier.intValue());
     }
 
+    /**
+     *
+     * Calculates points for one concrete column
+     *
+     * <p>
+     * @param sumOfColumns sum of all column values on the board
+     * <p/>
+     */
     public int calculateLeftTimeValue(int sumOfColumns){
         return originalEstimate - sumOfColumns;
     }
 
+    /**
+     *
+     * Creates a list of column multipliers
+     *
+     */
     public List<Double> createMultiplierList(){
-        List<Double> multiplicators = new ArrayList<>();
+        List<Double> multipliers = new ArrayList<>();
         double k = 0.0;
         for (int ts = 1; ts < timeInStatuses.size() - 1; ts++){
             k += 0.1;
-            multiplicators.add(k);
+            multipliers.add(k);
         }
-        return multiplicators;
+        return multipliers;
     }
 
-    public void print(){
-        System.out.println(this.workRatio);
-        System.out.println(this.originalEstimate);
-        System.out.println(this.remainingEstimate);
-        System.out.println(this.timeInStatuses.toString());
-    }
 }
