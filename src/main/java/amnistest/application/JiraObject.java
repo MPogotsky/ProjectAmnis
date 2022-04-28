@@ -6,28 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JiraObject {
-    public String workRatio;
-    public String startDate;
-    public int originalEstimate;
-    public String remainingEstimate;
-    public String progress;
+    public Integer workRatio;
+    public Integer originalEstimate;
+    public Integer remainingEstimate;
     public List<TimeInStatus> timeInStatuses;
 
-    public JiraObject(JiraClient jiraClient){
-        String AP = "AP-16";
-        this.workRatio = jiraClient.getFieldValue(AP,"workratio");
-        this.startDate = jiraClient.getFieldValue(AP,"customfield_10015");
-        this.originalEstimate = Integer.parseInt(jiraClient.getFieldValue(AP,"timeoriginalestimate"));
-        this.remainingEstimate = jiraClient.getFieldValue(AP,"timeestimate");
-        this.progress = jiraClient.getFieldValue(AP,"progress");
-        this.timeInStatuses = jiraClient.getTimeinStatus(AP);
+    public JiraObject(JiraClient jiraClient, String IssueKey){
+        this.workRatio = Integer.parseInt(jiraClient.getFieldValue(IssueKey,FieldID.WORK_RATIO.id));
+        this.originalEstimate = Integer.parseInt(jiraClient.getFieldValue(IssueKey,FieldID.TIME_ORIGINAL_ESTIMATE.id));
+        this.remainingEstimate = Integer.parseInt(jiraClient.getFieldValue(IssueKey,FieldID.TIME_ESTIMATE.id));
+        this.timeInStatuses = jiraClient.getTimeinStatus(IssueKey);
     }
 
     public int calculateTaskValue(){
         int value = 0;
-        List<Float> multipliers = createMultiplierList();
+        List<Double> multipliers = createMultiplierList();
         if (!this.timeInStatuses.isEmpty()) {
-            int realRatio = originalEstimate;
             for (int ts = 1; ts < timeInStatuses.size() - 1; ts++) {
                 value += calculateColumnValue(timeInStatuses.get(ts).stayedInColumn,multipliers.get(ts - 1));
             }
@@ -37,19 +31,19 @@ public class JiraObject {
         return value;
     }
 
-    public int calculateColumnValue(int timeInColumn, float multiplier){
-        return (int) (timeInColumn*multiplier);
+    public int calculateColumnValue(int timeInColumn, Double multiplier){
+        return (timeInColumn*multiplier.intValue());
     }
 
     public int calculateLeftTimeValue(int sumOfColumns){
         return originalEstimate - sumOfColumns;
     }
 
-    public List<Float> createMultiplierList(){
-        List<Float> multiplicators = new ArrayList<Float>();
-        float k = 0.0f;
+    public List<Double> createMultiplierList(){
+        List<Double> multiplicators = new ArrayList<>();
+        double k = 0.0;
         for (int ts = 1; ts < timeInStatuses.size() - 1; ts++){
-            k += 0.1f;
+            k += 0.1;
             multiplicators.add(k);
         }
         return multiplicators;
@@ -57,10 +51,8 @@ public class JiraObject {
 
     public void print(){
         System.out.println(this.workRatio);
-        System.out.println(this.startDate);
         System.out.println(this.originalEstimate);
         System.out.println(this.remainingEstimate);
-        System.out.println(this.progress);
         System.out.println(this.timeInStatuses.toString());
     }
 }
