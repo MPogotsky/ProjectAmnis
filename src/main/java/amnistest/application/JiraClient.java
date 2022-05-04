@@ -2,15 +2,12 @@ package amnistest.application;
 
 
 import com.atlassian.jira.rest.client.api.JiraRestClient;
-import com.atlassian.jira.rest.client.api.OptionalIterable;
 import com.atlassian.jira.rest.client.api.domain.*;
-import com.atlassian.jira.rest.client.api.domain.input.AuditRecordSearchInput;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import io.atlassian.util.concurrent.Promise;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -18,12 +15,7 @@ public class JiraClient {
     private String username;
     private String password;
     private String jiraUrl;
-
-
-
     private JiraRestClient restClient;
-
-
 
     public JiraClient(String username, String password, String jiraUrl) {
         setUsername(username);
@@ -31,7 +23,6 @@ public class JiraClient {
         setJiraUrl(jiraUrl);
         this.restClient = getJiraRestClient();
     }
-
 
     private JiraRestClient getJiraRestClient() {
         return new AsynchronousJiraRestClientFactory()
@@ -68,6 +59,10 @@ public class JiraClient {
         System.out.println(project.getUri());
     }
 
+    /**
+     * Creates list of all user projects by keys from JiraClient user
+     *
+     */
     public List<String> getAllUserProjects() {
         Iterable<BasicProject> projects = restClient.getProjectClient().getAllProjects().claim();
         List<String> userProjects = new ArrayList<>();
@@ -77,6 +72,15 @@ public class JiraClient {
         return userProjects;
     }
 
+    public Issue getIssue(String issueKey){
+        return restClient.getIssueClient().getIssue(issueKey).claim();
+    }
+
+    /**
+     * Creates list of all user issues
+     * from all projects assigned to user
+     *
+     */
     public List<Issue> getAllUserIssues() {
         List<String> userProjectNames = getAllUserProjects();
         List<Issue> userIssues = new ArrayList<Issue>();
@@ -105,16 +109,15 @@ public class JiraClient {
     }
 
     public String getFieldValue(String IssueKey, String fieldID) {
-        Issue issue1 = restClient.getIssueClient().getIssue(IssueKey).claim();
-        IssueField field = issue1.getField(fieldID);
+        IssueField field = getIssue(IssueKey).getField(fieldID);
         return String.valueOf(field.getValue());
     }
 
 
 
-    public List<TimeInStatus> getTimeinStatus(String IssueKey) {
+    public List<TimeInStatus> getTimesInStatuses(String IssueKey) {
         List<TimeInStatus> timeInStatuses = new ArrayList<>();
-        Issue issue = restClient.getIssueClient().getIssue(IssueKey).claim();
+        Issue issue = getIssue(IssueKey);
 
         String value = String.valueOf(issue.getField(FieldID.TIME_IN_STATUS.id).getValue());
         if (!value.equals("null")) {
