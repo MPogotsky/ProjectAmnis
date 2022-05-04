@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="AmnisTestServer:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>AmnisTestServer</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="AmnisTestServer-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="AmnisTestServer:war exploded" />
+    </root>
+  </artifact>
+</component>
