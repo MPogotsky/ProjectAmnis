@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 version="3.0">
+
+    <entity class="com.amnis.model.CommitsEntity">
+        <table name="commits" schema="server_database" catalog=""/>
+        <attributes>
+            <id name="commitId">
+                <column name="commit_id"/>
+            </id>
+            <basic name="taskId">
+                <column name="task_id"/>
+            </basic>
+            <basic name="taskStatus">
+                <column name="task_status"/>
+            </basic>
+            <basic name="commitedValue">
+                <column name="commited_value"/>
+            </basic>
+            <basic name="points">
+                <column name="points"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>
