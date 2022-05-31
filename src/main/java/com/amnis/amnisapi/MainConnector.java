@@ -2,8 +2,8 @@ package com.amnis.amnisapi;
 
 public interface MainConnector {
 
-    public void requestData(String id);
+    public void requestData(String taskId, String username);
 
-    public void callToDB(String id);
+    public void callToDB(String taskId);
 
 }

@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.sql.Time;
 
 @Entity
-@Table(name = "tasks", schema = "server_database", catalog = "")
-public class TasksEntity {
+@Table(name = "tasks", schema = "server_database")
+public class TasksEntity extends BasicEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
@@ -22,6 +22,14 @@ public class TasksEntity {
     @Basic
     @Column(name = "points")
     private Integer points;
+
+    @Basic
+    @Column(name = "jira_id")
+    private String jiraId;
+
+    public String getJiraId() { return jiraId; }
+
+    public void setJiraId(String jiraId) { this.jiraId = jiraId;}
 
     public int getId() {
         return id;
@@ -76,7 +84,7 @@ public class TasksEntity {
         if (estimatedTime != null ? !estimatedTime.equals(that.estimatedTime) : that.estimatedTime != null)
             return false;
         if (points != null ? !points.equals(that.points) : that.points != null) return false;
-
+        if (jiraId != null ? !jiraId.equals(that.jiraId) : that.jiraId != null) return false;
         return true;
     }
 
@@ -87,6 +95,7 @@ public class TasksEntity {
         result = 31 * result + (taskStatus != null ? taskStatus.hashCode() : 0);
         result = 31 * result + (estimatedTime != null ? estimatedTime.hashCode() : 0);
         result = 31 * result + (points != null ? points.hashCode() : 0);
+        result = 31 * result + (jiraId != null ? jiraId.hashCode() : 0);
         return result;
     }
 
@@ -98,6 +107,7 @@ public class TasksEntity {
                 ", taskStatus=" + taskStatus +
                 ", estimatedTime=" + estimatedTime +
                 ", points=" + points +
+                ", jiraId=" + jiraId +
                 '}';
     }
 }

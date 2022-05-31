@@ -6,7 +6,7 @@ public class GitlabConnector implements MainConnector {
     }
 
     @Override
-    public void requestData(String id){
+    public void requestData(String taskId, String username){
         //create request for gitlab
 
     }

@@ -3,8 +3,8 @@ package com.amnis.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users", schema = "server_database", catalog = "")
-public class UsersEntity {
+@Table(name = "users", schema = "server_database")
+public class UsersEntity extends BasicEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")

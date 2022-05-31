@@ -3,12 +3,12 @@ package com.amnis.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "commits", schema = "server_database", catalog = "")
-public class CommitsEntity {
+@Table(name = "commits", schema = "server_database")
+public class CommitsEntity extends BasicEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "commit_id")
-    private int commitId;
+    @Column(name = "id")
+    private int Id;
     @Basic
     @Column(name = "task_id")
     private Integer taskId;
@@ -22,12 +22,12 @@ public class CommitsEntity {
     @Column(name = "points")
     private Integer points;
 
-    public int getCommitId() {
-        return commitId;
+    public int getId() {
+        return Id;
     }
 
-    public void setCommitId(int commitId) {
-        this.commitId = commitId;
+    public void setId(int commitId) {
+        this.Id = commitId;
     }
 
     public Integer getTaskId() {
@@ -69,7 +69,7 @@ public class CommitsEntity {
 
         CommitsEntity that = (CommitsEntity) o;
 
-        if (commitId != that.commitId) return false;
+        if (Id != that.Id) return false;
         if (taskId != null ? !taskId.equals(that.taskId) : that.taskId != null) return false;
         if (taskStatus != null ? !taskStatus.equals(that.taskStatus) : that.taskStatus != null) return false;
         if (commitedValue != null ? !commitedValue.equals(that.commitedValue) : that.commitedValue != null)
@@ -81,7 +81,7 @@ public class CommitsEntity {
 
     @Override
     public int hashCode() {
-        int result = commitId;
+        int result = Id;
         result = 31 * result + (taskId != null ? taskId.hashCode() : 0);
         result = 31 * result + (taskStatus != null ? taskStatus.hashCode() : 0);
         result = 31 * result + (commitedValue != null ? commitedValue.hashCode() : 0);
@@ -92,7 +92,7 @@ public class CommitsEntity {
     @Override
     public String toString() {
         return "CommitsEntity{" +
-                "commitId=" + commitId +
+                "commitId=" + Id +
                 ", taskId=" + taskId +
                 ", taskStatus=" + taskStatus +
                 ", commitedValue=" + commitedValue +

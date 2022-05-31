@@ -15,7 +15,7 @@ public class ProcessingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String task_id = request.getParameter("task_id");
-        System.out.println(task_id);
+        //System.out.println(task_id);
 
         MainConnector mainConnector = new JiraConnector();
         mainConnector.callToDB(task_id);

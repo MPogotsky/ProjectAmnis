@@ -15,7 +15,7 @@
         testing JSP
     </h1>
     <p>
-        <%= "Sosat + lezhat" %>
+        <%= "Test JSP" %>
     </p>
 
 </body>
