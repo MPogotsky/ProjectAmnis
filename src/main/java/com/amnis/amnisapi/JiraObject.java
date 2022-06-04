@@ -1,5 +1,6 @@
 package com.amnis.amnisapi;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,10 @@ public class JiraObject {
             value += leftTimeValue;
         }
         return value;
+    }
+
+    public Time calculateOverallTime(){
+        return new Time(0);
     }
 
     /**

@@ -5,8 +5,8 @@
     <entity class="com.amnis.model.CommitsEntity">
         <table name="commits" schema="server_database" catalog=""/>
         <attributes>
-            <id name="commitId">
-                <column name="commit_id"/>
+            <id name="id">
+                <column name="id"/>
             </id>
             <basic name="taskId">
                 <column name="task_id"/>

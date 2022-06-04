@@ -10,22 +10,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class JiraClient {
+public class JiraClient{
     private String username;
-    private String password;
+    private String token;
     private String jiraUrl;
     private JiraRestClient restClient;
 
     public JiraClient(String username, String password, String jiraUrl) {
         setUsername(username);
-        setPassword(password);
+        setToken(password);
         setJiraUrl(jiraUrl);
         this.restClient = getJiraRestClient();
     }
 
     private JiraRestClient getJiraRestClient() {
         return new AsynchronousJiraRestClientFactory()
-                .createWithBasicHttpAuthentication(getJiraUri(), this.username, this.password);
+                .createWithBasicHttpAuthentication(getJiraUri(), this.username, this.token);
     }
 
     private URI getJiraUri() {
@@ -180,12 +180,12 @@ public class JiraClient {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getToken() {
+        return token;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getJiraUrl() {

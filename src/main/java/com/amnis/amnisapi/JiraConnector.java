@@ -1,71 +1,42 @@
 package com.amnis.amnisapi;
 
 import com.amnis.model.*;
+import com.atlassian.jira.rest.client.api.StatusCategory;
+import com.atlassian.jira.rest.client.api.domain.Issue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class JiraConnector implements MainConnector {
+import static com.amnis.amnisapi.TaskStatuses.*;
 
+public class JiraConnector {
+    private UsersEntity user;
+    private CrudDAO databaseHandler;
 
-    BasicDAO basicDAO;
-    JiraClient jiraClient;
-    public JiraConnector(){
-        this.basicDAO = new CrudDAO();
+    public JiraConnector(UsersEntity user, CrudDAO databaseHandler) {
+        this.user = user;
+        this.databaseHandler = databaseHandler;
     }
 
-
-
-    @Override
-    public void requestData(String taskId, String username){
-        UsersEntity user = verifyUser(username);
-
-        if(user!=null){
-
-
-
-
-        }
-
-    }
-
-    @Override
-    public void callToDB(String id){
-
-        //Test logic!!!!
-
-
-        int taskId = Integer.parseInt(id);
-
-
-
-        TasksEntity currentTask = (TasksEntity) basicDAO.findEntityById(taskId, new TasksEntity());
-
-        UsersEntity currentUser = (UsersEntity) basicDAO.findEntityById(currentTask.getUserId(), new UsersEntity());
-
-//        CommitsEntity currentCommit = dbdao.findCommitById(currentTask.getId());
-
-        System.out.println(currentTask);
-        System.out.println(currentUser.toString());
-//        System.out.println(currentTask.toString());
-
-
-        //Test logic!!!!
-    }
-
-    public UsersEntity verifyUser(String username){
-
-        List<UsersEntity> usersList = (List<UsersEntity>) basicDAO.findAllEntities(new UsersEntity());
-
-        for(UsersEntity user: usersList){
-            if(user.getLogin().equals(username)){
-                return user;
+    public TasksEntity requestData(String taskId, String companyURI) {
+        JiraClient jiraClient = new JiraClient(user.getLogin(), user.getToken(), companyURI);
+        Issue issue = jiraClient.getIssue(taskId);
+        JiraObject jiraObject = new JiraObject(jiraClient, taskId);
+        switch (issue.getStatus().getName()) {
+            case "Done" -> {
+                return new TasksEntity(user.getId(), COMPLETE.statusValue,
+                        jiraObject.calculateOverallTime(), jiraObject.calculateTaskValue(), taskId);
+            }
+            case "To Do" -> {
+                return new TasksEntity(user.getId(), TODO.statusValue, null,
+                        null, taskId);
+            }
+            case "In Progress" -> {
+                return new TasksEntity(user.getId(), INPROGRESS.statusValue, jiraObject.calculateOverallTime(), null, taskId);
+            }
+            default -> {
+                return new TasksEntity(user.getId(), UNDEFINED.statusValue, null, null, taskId);
             }
         }
-        return null;
     }
-
-
-
-
 }

@@ -3,18 +3,23 @@ package com.amnis.model;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import javax.persistence.Basic;
-import java.util.List;
+public class BasicDAO {
 
-public interface BasicDAO {
+    private Session session;
+    private Transaction tx;
 
-    public BasicEntity findEntityById(int id,BasicEntity entity);
+    public Session getSession() {
+        return session;
+    }
 
-    public void saveEntity(BasicEntity entity);
+    public void openSession() {
+        session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        tx = session.beginTransaction();
+    }
 
-    public void updateEntity(BasicEntity entity);
+    public void closeSession() {
+        tx.commit();
+        session.close();
+    }
 
-    public void deleteEntity(BasicEntity entity);
-
-    public List<?> findAllEntities(BasicEntity entity);
 }

@@ -71,6 +71,16 @@ public class TasksEntity extends BasicEntity{
         this.points = points;
     }
 
+    public TasksEntity(){};
+
+    public TasksEntity(Integer userId, Integer taskStatus, Time estimatedTime, Integer points, String jiraId) {
+        this.userId = userId;
+        this.taskStatus = taskStatus;
+        this.estimatedTime = estimatedTime;
+        this.points = points;
+        this.jiraId = jiraId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -20,9 +20,7 @@ public class RequestServlet extends HttpServlet implements Serializable {
 
         System.out.println(info);
 
-        JiraConnector jiraConnector = new JiraConnector();
 
-        jiraConnector.callToDB(info);
 
 
     }
