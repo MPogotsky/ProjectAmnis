@@ -23,11 +23,11 @@ public class JiraConnector {
         Issue issue = jiraClient.getIssue(taskId);
         JiraObject jiraObject = new JiraObject(jiraClient, taskId);
         switch (issue.getStatus().getName()) {
-            case "Done" -> {
+            case "DONE" -> {
                 return new TasksEntity(user.getId(), COMPLETE.statusValue,
                         jiraObject.calculateOverallTime(), jiraObject.calculateTaskValue(), taskId);
             }
-            case "To Do" -> {
+            case "TO DO" -> {
                 return new TasksEntity(user.getId(), TODO.statusValue, null,
                         null, taskId);
             }

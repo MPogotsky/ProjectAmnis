@@ -22,6 +22,7 @@ public class JiraObject {
      * Calculates points for the task which is done
      *
      */
+    //TODO LUKA
     public int calculateTaskValue(){
         int value = 0;
         List<Double> multipliers = createMultiplierList();
@@ -35,7 +36,9 @@ public class JiraObject {
         return value;
     }
 
+    //TODO LUKA
     public Time calculateOverallTime(){
+        Time time;
         return new Time(0);
     }
 
