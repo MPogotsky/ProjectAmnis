@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
                  version="3.0">
-
     <entity class="com.amnis.model.UsersEntity">
-        <table name="users" schema="server_database" catalog=""/>
+        <table name="tasks" schema="server_database" catalog=""/>
         <attributes>
             <id name="id">
                 <column name="id"/>
@@ -13,6 +12,12 @@
             </basic>
             <basic name="token">
                 <column name="token"/>
+            </basic>
+            <basic name="gitlabProjectId">
+                <column name="gitlab_project_id"/>
+            </basic>
+            <basic name="gitlabToken">
+                <column name="gitlab_token"/>
             </basic>
         </attributes>
     </entity>

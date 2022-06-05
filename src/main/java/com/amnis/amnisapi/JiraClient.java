@@ -5,6 +5,7 @@ import com.atlassian.jira.rest.client.api.domain.*;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import io.atlassian.util.concurrent.Promise;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,37 +141,34 @@ public class JiraClient{
         return data[1];
     }
 
-    public int extractTimeInColumn(String[] data) {
+    public Long extractTimeInColumn(String[] data) {
         if (data.length == 6) {
             if (!data[0].equals("*")) {
-                return Integer.parseInt(data[2]);
+                return Long.valueOf(data[2]);
             } else {
-                return Integer.parseInt(data[3]);
+                return Long.valueOf(data[3]);
             }
         }
-        return Integer.parseInt(data[3]);
+        return Long.valueOf(data[3]);
 
     }
 
-    public int extractStayedInColumn(String[] data) {
+    public Long extractStayedInColumn(String[] data) {
         if (data.length == 6) {
             if (!data[0].equals("*")) {
-                return Integer.parseInt(data[4]);
+                return Long.valueOf(data[4]);
             } else {
-                return Integer.parseInt(data[5]);
+                return Long.valueOf(data[5]);
             }
         }
-        return Integer.parseInt(data[5]);
+        return Long.valueOf(data[5]);
 
     }
 
     public TimeInStatus getTimeInStatus(String[] data) {
-        TimeInStatus tis = new TimeInStatus();
-        tis.column = extractColumnName(data);
-        tis.timesInColumn = extractTimeInColumn(data);
-        tis.stayedInColumn = extractStayedInColumn(data);
-        return tis;
+        return new TimeInStatus(extractColumnName(data), extractTimeInColumn(data), extractStayedInColumn(data));
     }
+
 
     public String getUsername() {
         return username;

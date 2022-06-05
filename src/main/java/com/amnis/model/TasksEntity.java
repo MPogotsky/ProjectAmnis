@@ -7,9 +7,6 @@ import java.sql.Time;
 @Table(name = "tasks", schema = "server_database")
 public class TasksEntity extends BasicEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id")
-    private int id;
     @Basic
     @Column(name = "user_id")
     private Integer userId;

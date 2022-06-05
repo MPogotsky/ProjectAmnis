@@ -11,9 +11,6 @@
             <basic name="taskId">
                 <column name="task_id"/>
             </basic>
-            <basic name="taskStatus">
-                <column name="task_status"/>
-            </basic>
             <basic name="commitedValue">
                 <column name="commited_value"/>
             </basic>

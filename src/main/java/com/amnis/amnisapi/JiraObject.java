@@ -23,14 +23,14 @@ public class JiraObject {
      *
      */
     //TODO LUKA
-    public int calculateTaskValue(){
-        int value = 0;
+    public Long calculateTaskValue(){
+        Long value = 0L;
         List<Double> multipliers = createMultiplierList();
         if (!this.timeInStatuses.isEmpty()) {
             for (int ts = 1; ts < timeInStatuses.size() - 1; ts++) {
                 value += calculateColumnValue(timeInStatuses.get(ts).stayedInColumn,multipliers.get(ts - 1));
             }
-            int leftTimeValue = calculateLeftTimeValue(value);
+            Long leftTimeValue = calculateLeftTimeValue(value);
             value += leftTimeValue;
         }
         return value;
@@ -38,8 +38,7 @@ public class JiraObject {
 
     //TODO LUKA
     public Time calculateOverallTime(){
-        Time time;
-        return new Time(0);
+        return new Time(1,0,0);
     }
 
     /**
@@ -51,7 +50,7 @@ public class JiraObject {
      * @param multiplier column value multiplier
      * <p/>
      */
-    public int calculateColumnValue(int timeInColumn, Double multiplier){
+    public Long calculateColumnValue(Long timeInColumn, Double multiplier){
         return (timeInColumn*multiplier.intValue());
     }
 
@@ -63,7 +62,7 @@ public class JiraObject {
      * @param sumOfColumns sum of all column values on the board
      * <p/>
      */
-    public int calculateLeftTimeValue(int sumOfColumns){
+    public Long calculateLeftTimeValue(Long sumOfColumns){
         return originalEstimate - sumOfColumns;
     }
 

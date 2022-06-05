@@ -3,6 +3,7 @@ package com.amnis.amnisapi;
 import com.amnis.model.*;
 import com.atlassian.jira.rest.client.api.StatusCategory;
 import com.atlassian.jira.rest.client.api.domain.Issue;
+import com.atlassian.jira.rest.client.internal.json.JsonParseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,12 @@ public class JiraConnector {
         JiraClient jiraClient = new JiraClient(user.getLogin(), user.getToken(), companyURI);
         Issue issue = jiraClient.getIssue(taskId);
         JiraObject jiraObject = new JiraObject(jiraClient, taskId);
+        System.out.println(issue.getStatus().getName());
         switch (issue.getStatus().getName()) {
             case "DONE" -> {
+                System.out.println(jiraObject.calculateTaskValue().toString());
                 return new TasksEntity(user.getId(), COMPLETE.statusValue,
-                        jiraObject.calculateOverallTime(), jiraObject.calculateTaskValue(), taskId);
+                        jiraObject.calculateOverallTime(), Math.toIntExact(jiraObject.calculateTaskValue()), taskId);
             }
             case "TO DO" -> {
                 return new TasksEntity(user.getId(), TODO.statusValue, null,

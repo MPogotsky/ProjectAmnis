@@ -11,7 +11,12 @@ public class CrudDAO extends BasicDAO {
 
     public <T> List<?> findFieldValuesByCondition(String conditionFieldName, BasicEntity entity,T conditionValue) {
         openSession();
-        List<?> results = getSession().createQuery("FROM " + entity.getClass().getName() +" WHERE " + conditionFieldName + " = " + conditionValue.toString()).list();
+        StringBuilder sb = new StringBuilder();
+        sb.append("FROM " + entity.getClass().getName() +" WHERE " + conditionFieldName + " = ");
+        sb.append("'");
+        sb.append(conditionValue.toString());
+        sb.append("'");
+        List<?> results = getSession().createQuery(sb.toString()).list();
         closeSession();
         return results;
     }
